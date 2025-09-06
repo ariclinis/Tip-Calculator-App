@@ -1,10 +1,10 @@
 package com.example.tipcalculatorapp
 
-import android.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,21 +12,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +55,7 @@ class MainActivity : ComponentActivity() {
 fun TipCalculate(name: String, modifier: Modifier = Modifier) {
     var amountInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount.toString())
+    val tip = calculateTip(amount)
 
     Column(
         modifier = Modifier
@@ -96,10 +92,10 @@ fun TipCalculate(name: String, modifier: Modifier = Modifier) {
     }
 
 }
-
-private fun calculateTip(amount: String, tipPercent: Double = 15.0) : String {
+@VisibleForTesting
+internal fun calculateTip(amount: Double, tipPercent: Double = 15.0) : String {
     var tip = 0.0;
-    if(amount.toDouble() > 0) {
+    if(amount > 0) {
         tip = tipPercent / 100 * amount.toDouble()
     }
     return NumberFormat.getCurrencyInstance().format(tip)
